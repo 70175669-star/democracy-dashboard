@@ -30,14 +30,13 @@ CORE_COLS = [
 
 # ── Load ──────────────────────────────────────────────────────────────────────
 
-def load_data(path: str = "data/V-Dem-CY-Full_Others-v16.csv") -> pd.DataFrame:
-    """Load the V-Dem CSV and return a cleaned, enriched DataFrame."""
-    df = pd.read_csv(path, usecols=lambda c: c in CORE_COLS, low_memory=False)
+def load_data(path: str = None) -> pd.DataFrame:
+    file_id = "1xq9aEOAe0VvcZRhUTPUU8z58kq-GZPqp"
+    url = f"https://drive.google.com/uc?export=download&id={file_id}"
+    df = pd.read_csv(url, usecols=lambda c: c in CORE_COLS, low_memory=False)
 
-    # Add human-readable region label
     df["region"] = df["e_regionpol_6C"].map(REGION_MAP)
 
-    # Rename for display
     df.rename(columns={
         "v2x_polyarchy":      "Electoral Democracy",
         "v2x_libdem":         "Liberal Democracy",
@@ -56,10 +55,10 @@ def load_data(path: str = "data/V-Dem-CY-Full_Others-v16.csv") -> pd.DataFrame:
         "e_pop":              "Population",
     }, inplace=True)
 
-    # Drop rows with no core score
     df.dropna(subset=["Electoral Democracy"], inplace=True)
     df.reset_index(drop=True, inplace=True)
     return df
+       
 
 
 # ── Individual filter functions ───────────────────────────────────────────────
