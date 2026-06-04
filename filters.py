@@ -25,7 +25,7 @@ CORE_COLS = [
 ]
 
 def load_data(path: str = None) -> pd.DataFrame:
-    file_id = "PASTE_YOUR_FILE_ID_HERE"
+    file_id = "1xq9aEOAe0VvcZRhUTPUU8z58kq-GZPqp"
     url = f"https://drive.google.com/uc?export=download&id={file_id}"
 
     # Load WITHOUT usecols filter first so we can check what's available
