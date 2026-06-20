@@ -22,10 +22,12 @@ CORE_COLS = [
 ]
 
 def load_data(path=None):
+    import gdown
     FILE_ID = "1T4n6ezSmJsnqI1UkulowsF1dJ8dafcMk"
-    url = f"https://drive.google.com/uc?export=download&id={FILE_ID}"
-    df = pd.read_csv(url, low_memory=False)
-    
+    output = "/tmp/vdem.csv"
+    gdown.download(f"https://drive.google.com/uc?id={FILE_ID}", 
+                   output, quiet=False, fuzzy=True)
+    df = pd.read_csv(output, low_memory=False)
     # Keep only available core columns
     available = [c for c in CORE_COLS if c in df.columns]
     df = df[available]
