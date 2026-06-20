@@ -23,8 +23,7 @@ CORE_COLS = [
 ]
 
 def load_data(path=None):
-    csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "vdem_tiny.csv")
-    df = pd.read_csv(csv_path, low_memory=False)
+    df = pd.read_csv("data/vdem_tiny.csv", low_memory=False)
     available = [c for c in CORE_COLS if c in df.columns]
     if available:
         df = df[available]
