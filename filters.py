@@ -1,9 +1,3 @@
-# filters.py
-# ─────────────────────────────────────────────────────────────────────────────
-# All filtering / data-preparation logic for the V-Dem Dashboard.
-# app.py imports these functions and calls them before passing data to charts.
-# ─────────────────────────────────────────────────────────────────────────────
-
 import pandas as pd
 import numpy as np
 
@@ -27,18 +21,21 @@ CORE_COLS = [
     "e_regionpol_6C", "e_gdppc", "e_pop",
 ]
 
-
-# ── Load ──────────────────────────────────────────────────────────────────────
-
-def load_data(path: str = None) -> pd.DataFrame:
+def load_data(path=None):
     FILE_ID = "1T4n6ezSmJsnqI1UkulowsF1dJ8dafcMk"
     url = f"https://drive.google.com/uc?export=download&id={FILE_ID}"
-    df = pd.read_csv(url, usecols=lambda c: c in CORE_COLS, low_memory=False)
-
-    # Add human-readable region label
-    df["region"] = df["e_regionpol_6C"].map(REGION_MAP)
-
-    # Rename for display
+    df = pd.read_csv(url, low_memory=False)
+    
+    # Keep only available core columns
+    available = [c for c in CORE_COLS if c in df.columns]
+    df = df[available]
+    
+    # Add region if column exists
+    if "e_regionpol_6C" in df.columns:
+        df["region"] = df["e_regionpol_6C"].map(REGION_MAP)
+    else:
+        df["region"] = "Unknown"
+    
     df.rename(columns={
         "v2x_polyarchy":      "Electoral Democracy",
         "v2x_libdem":         "Liberal Democracy",
@@ -57,63 +54,38 @@ def load_data(path: str = None) -> pd.DataFrame:
         "e_pop":              "Population",
     }, inplace=True)
 
-    # Drop rows with no core score
-    df.dropna(subset=["Electoral Democracy"], inplace=True)
+    if "Electoral Democracy" in df.columns:
+        df.dropna(subset=["Electoral Democracy"], inplace=True)
     df.reset_index(drop=True, inplace=True)
     return df
 
-
-# ── Individual filter functions ───────────────────────────────────────────────
-
-def filter_by_year(df: pd.DataFrame, start: int, end: int) -> pd.DataFrame:
-    """Keep rows where year is within [start, end]."""
+def filter_by_year(df, start, end):
     return df[(df["year"] >= start) & (df["year"] <= end)]
 
-
-def filter_by_region(df: pd.DataFrame, regions: list) -> pd.DataFrame:
-    """Keep rows whose region label is in the selected list.
-    If the list is empty, return the full DataFrame unchanged."""
+def filter_by_region(df, regions):
     if not regions:
         return df
     return df[df["region"].isin(regions)]
 
-
-def filter_by_score(df: pd.DataFrame, col: str,
-                    min_val: float, max_val: float) -> pd.DataFrame:
-    """Keep rows where *col* is within [min_val, max_val]."""
+def filter_by_score(df, col, min_val, max_val):
+    if col not in df.columns:
+        return df
     return df[(df[col] >= min_val) & (df[col] <= max_val)]
 
-
-def filter_by_country(df: pd.DataFrame, search_text: str) -> pd.DataFrame:
-    """Case-insensitive substring search on country_name."""
+def filter_by_country(df, search_text):
     if not search_text or not search_text.strip():
         return df
     return df[df["country_name"].str.contains(search_text.strip(), case=False, na=False)]
 
-
-def filter_multiselect(df: pd.DataFrame,
-                       col: str, values: list) -> pd.DataFrame:
-    """Keep rows where *col* value is in *values*.
-    Returns full DataFrame if values list is empty."""
+def filter_multiselect(df, col, values):
     if not values:
         return df
     return df[df[col].isin(values)]
 
-
-def reset_filters(df_original: pd.DataFrame) -> pd.DataFrame:
-    """Return the original unfiltered DataFrame (pass the cached original)."""
+def reset_filters(df_original):
     return df_original.copy()
 
-
-# ── Compound helper ───────────────────────────────────────────────────────────
-
-def apply_all_filters(df: pd.DataFrame,
-                      year_range: tuple,
-                      regions: list,
-                      score_range: tuple,
-                      countries: list,
-                      search_text: str) -> pd.DataFrame:
-    """Apply every active filter in sequence and return the result."""
+def apply_all_filters(df, year_range, regions, score_range, countries, search_text):
     filtered = df.copy()
     filtered = filter_by_year(filtered, *year_range)
     filtered = filter_by_region(filtered, regions)
