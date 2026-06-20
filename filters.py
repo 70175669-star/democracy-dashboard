@@ -23,23 +23,10 @@ CORE_COLS = [
 
 
 def load_data(path=None):
-    import io, requests
-    FILE_ID = "1T4n6ezSmJsnqI1UkulowsF1dJ8dafcMk"
-    session = requests.Session()
-    URL = f"https://drive.google.com/uc?export=download&id={FILE_ID}"
-    response = session.get(URL, stream=True)
-    token = None
-    for key, value in response.cookies.items():
-        if key.startswith("download_warning"):
-            token = value
-    if token:
-        URL = URL + f"&confirm={token}"
-        response = session.get(URL, stream=True)
-    df = pd.read_csv(io.BytesIO(response.content), low_memory=False)
-    # Keep only available core columns
+    df = pd.read_csv("data/vdem_tiny.csv", low_memory=False)
     available = [c for c in CORE_COLS if c in df.columns]
     df = df[available]
-    # Add region if column exists
+    
     if "e_regionpol_6C" in df.columns:
         df["region"] = df["e_regionpol_6C"].map(REGION_MAP)
     else:
@@ -62,12 +49,11 @@ def load_data(path=None):
         "e_gdppc":            "GDP per Capita",
         "e_pop":              "Population",
     }, inplace=True)
-
+    
     if "Electoral Democracy" in df.columns:
         df.dropna(subset=["Electoral Democracy"], inplace=True)
     df.reset_index(drop=True, inplace=True)
     return df
-
 def filter_by_year(df, start, end):
     return df[(df["year"] >= start) & (df["year"] <= end)]
 
