@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 REGION_MAP = {
     1: "E. Europe & C. Asia",
@@ -22,9 +23,8 @@ CORE_COLS = [
 ]
 
 def load_data(path=None):
-    import os
-csv_path = os.path.join(os.path.dirname(__file__), "data", "vdem_tiny.csv")
-df = pd.read_csv(csv_path, low_memory=False)
+    csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "vdem_tiny.csv")
+    df = pd.read_csv(csv_path, low_memory=False)
     available = [c for c in CORE_COLS if c in df.columns]
     if available:
         df = df[available]
@@ -33,21 +33,21 @@ df = pd.read_csv(csv_path, low_memory=False)
     else:
         df["region"] = "Unknown"
     df.rename(columns={
-        "v2x_polyarchy":      "Electoral Democracy",
-        "v2x_libdem":         "Liberal Democracy",
-        "v2x_partipdem":      "Participatory Democracy",
-        "v2x_delibdem":       "Deliberative Democracy",
-        "v2x_egaldem":        "Egalitarian Democracy",
-        "v2x_freexp_altinf":  "Freedom of Expression",
-        "v2x_frassoc_thick":  "Freedom of Association",
-        "v2xcl_rol":          "Rule of Law",
-        "v2x_corr":           "Political Corruption",
-        "v2x_execorr":        "Executive Corruption",
-        "v2xel_frefair":      "Free & Fair Elections",
-        "v2x_suffr":          "Universal Suffrage",
-        "v2x_gender":         "Women Empowerment",
-        "e_gdppc":            "GDP per Capita",
-        "e_pop":              "Population",
+        "v2x_polyarchy": "Electoral Democracy",
+        "v2x_libdem": "Liberal Democracy",
+        "v2x_partipdem": "Participatory Democracy",
+        "v2x_delibdem": "Deliberative Democracy",
+        "v2x_egaldem": "Egalitarian Democracy",
+        "v2x_freexp_altinf": "Freedom of Expression",
+        "v2x_frassoc_thick": "Freedom of Association",
+        "v2xcl_rol": "Rule of Law",
+        "v2x_corr": "Political Corruption",
+        "v2x_execorr": "Executive Corruption",
+        "v2xel_frefair": "Free & Fair Elections",
+        "v2x_suffr": "Universal Suffrage",
+        "v2x_gender": "Women Empowerment",
+        "e_gdppc": "GDP per Capita",
+        "e_pop": "Population",
     }, inplace=True)
     if "Electoral Democracy" in df.columns:
         df.dropna(subset=["Electoral Democracy"], inplace=True)
