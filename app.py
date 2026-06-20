@@ -37,7 +37,7 @@ st.markdown("""
 # ── Load data (cached) ────────────────────────────────────────────────────────
 @st.cache_data(show_spinner="Loading V-Dem dataset …")
 def get_data():
-    return filters.load_data("data/V-Dem-CY-Full_Others-v16.csv")
+    return filters.load_data()
 
 df_full = get_data()
 
