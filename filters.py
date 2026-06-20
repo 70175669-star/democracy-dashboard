@@ -30,9 +30,10 @@ CORE_COLS = [
 
 # ── Load ──────────────────────────────────────────────────────────────────────
 
-def load_data(path: str = "data/V-Dem-CY-Full_Others-v16.csv") -> pd.DataFrame:
-    """Load the V-Dem CSV and return a cleaned, enriched DataFrame."""
-    df = pd.read_csv(path, usecols=lambda c: c in CORE_COLS, low_memory=False)
+def load_data(path: str = None) -> pd.DataFrame:
+    FILE_ID = "1T4n6ezSmJsnqI1UkulowsF1dJ8dafcMk"
+    url = f"https://drive.google.com/uc?export=download&id={FILE_ID}"
+    df = pd.read_csv(url, usecols=lambda c: c in CORE_COLS, low_memory=False)
 
     # Add human-readable region label
     df["region"] = df["e_regionpol_6C"].map(REGION_MAP)
