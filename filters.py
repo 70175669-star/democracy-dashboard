@@ -21,17 +21,24 @@ CORE_COLS = [
     "e_regionpol_6C", "e_gdppc", "e_pop",
 ]
 
+
 def load_data(path=None):
-    import gdown
+    import io, requests
     FILE_ID = "1T4n6ezSmJsnqI1UkulowsF1dJ8dafcMk"
-    output = "/tmp/vdem.csv"
-    gdown.download(f"https://drive.google.com/uc?id={FILE_ID}", 
-                   output, quiet=False, fuzzy=True)
-    df = pd.read_csv(output, low_memory=False)
+    session = requests.Session()
+    URL = f"https://drive.google.com/uc?export=download&id={FILE_ID}"
+    response = session.get(URL, stream=True)
+    token = None
+    for key, value in response.cookies.items():
+        if key.startswith("download_warning"):
+            token = value
+    if token:
+        URL = URL + f"&confirm={token}"
+        response = session.get(URL, stream=True)
+    df = pd.read_csv(io.BytesIO(response.content), low_memory=False)
     # Keep only available core columns
     available = [c for c in CORE_COLS if c in df.columns]
     df = df[available]
-    
     # Add region if column exists
     if "e_regionpol_6C" in df.columns:
         df["region"] = df["e_regionpol_6C"].map(REGION_MAP)
