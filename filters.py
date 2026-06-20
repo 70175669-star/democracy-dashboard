@@ -21,18 +21,15 @@ CORE_COLS = [
     "e_regionpol_6C", "e_gdppc", "e_pop",
 ]
 
-
 def load_data(path=None):
     df = pd.read_csv("data/vdem_tiny.csv", low_memory=False)
     available = [c for c in CORE_COLS if c in df.columns]
     if available:
-    df = df[available]
-    
+        df = df[available]
     if "e_regionpol_6C" in df.columns:
         df["region"] = df["e_regionpol_6C"].map(REGION_MAP)
     else:
         df["region"] = "Unknown"
-    
     df.rename(columns={
         "v2x_polyarchy":      "Electoral Democracy",
         "v2x_libdem":         "Liberal Democracy",
@@ -50,11 +47,11 @@ def load_data(path=None):
         "e_gdppc":            "GDP per Capita",
         "e_pop":              "Population",
     }, inplace=True)
-    
     if "Electoral Democracy" in df.columns:
         df.dropna(subset=["Electoral Democracy"], inplace=True)
     df.reset_index(drop=True, inplace=True)
     return df
+
 def filter_by_year(df, start, end):
     return df[(df["year"] >= start) & (df["year"] <= end)]
 
