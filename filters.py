@@ -3,12 +3,12 @@ import numpy as np
 import os
 
 REGION_MAP = {
-    1: "E. Europe & C. Asia",
-    2: "Latin America",
-    3: "MENA",
-    4: "Sub-Saharan Africa",
-    5: "W. Europe & N. America",
-    6: "Asia & Pacific",
+    1.0: "E. Europe & C. Asia",
+    2.0: "Latin America",
+    3.0: "MENA",
+    4.0: "Sub-Saharan Africa",
+    5.0: "W. Europe & N. America",
+    6.0: "Asia & Pacific",
 }
 
 CORE_COLS = [
@@ -28,7 +28,7 @@ def load_data(path=None):
     if available:
         df = df[available]
     if "e_regionpol_6C" in df.columns:
-        df["region"] = df["e_regionpol_6C"].map(REGION_MAP)
+        df["region"] = df["e_regionpol_6C"].astype(float).round().astype("Int64").map(REGION_MAP)
     else:
         df["region"] = "Unknown"
     df.rename(columns={
