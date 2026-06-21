@@ -92,13 +92,11 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("**⚙️ Scatter Plot Axes**")
     score_options = [c for c in charts.SCORE_COLS if c in df_full.columns]
-   x_axis = st.selectbox("X-Axis", score_options, index=0)
-    y_axis = st.selectbox("Y-Axis", score_options, index=score_options.index("Liberal Democracy"))
-
+    x_axis = st.selectbox("X-Axis", score_options, index=0)
+    y_axis = st.selectbox("Y-Axis", score_options, index=1)
     # 7. Chart column selector (histogram / box / violin)
     st.markdown("**📈 Column for Histogram / Box / Violin**")
-    hist_col = st.selectbox("Choose indicator", score_options,
-                            index=score_options.index("Electoral Democracy"))
+    hist_col = st.selectbox("Choose indicator", score_options, index=0)
 
     # 8. Reset button
     st.markdown("---")
