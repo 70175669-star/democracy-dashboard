@@ -49,15 +49,16 @@ with st.sidebar:
     st.markdown("---")
 
     # 1. Year range
-    st.markdown("**📅 Year Range**")
+  st.markdown("**📅 Year Range**")
     min_year = int(df_full["year"].min())
     max_year = int(df_full["year"].max())
+    if min_year == max_year:
+        max_year = min_year + 1
     year_range = st.slider(
         "Select year range",
         min_value=min_year, max_value=max_year,
         value=(min_year, max_year), step=1,
     )
-
     # 2. Region multi-select
     st.markdown("**🌍 World Region**")
     all_regions = sorted(df_full["region"].dropna().unique().tolist())
