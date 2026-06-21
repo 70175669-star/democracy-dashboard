@@ -51,8 +51,8 @@ with st.sidebar:
     # 1. Year range
     st.markdown("**📅 Year Range**")
     min_year = int(df_full["year"].min())
-max_year = int(df_full["year"].max())
-year_range = st.slider(
+    max_year = int(df_full["year"].max())
+    year_range = st.slider(
     "Select year range",
     min_value=min_year, max_value=max_year,
     value=(min_year, max_year), step=1,
