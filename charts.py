@@ -99,6 +99,11 @@ def chart_line(df: pd.DataFrame) -> plt.Figure:
     indices = ["Electoral Democracy", "Liberal Democracy",
                "Participatory Democracy", "Deliberative Democracy",
                "Egalitarian Democracy"]
+    indices = [c for c in indices if c in df.columns]
+    if not indices:
+        fig, ax = _fig(12, 5)
+        ax.text(0.5, 0.5, "No data available", ha="center", va="center")
+        return fig
     annual = df.groupby("year")[indices].mean()
     fig, ax = _fig(12, 5)
     for col, color in zip(indices, PALETTE):
@@ -110,7 +115,6 @@ def chart_line(df: pd.DataFrame) -> plt.Figure:
     ax.set_ylim(0, 1)
     fig.tight_layout()
     return fig
-
 
 # ── 4. BAR CHART ─────────────────────────────────────────────────────────────
 def chart_bar(df: pd.DataFrame) -> plt.Figure:
