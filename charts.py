@@ -273,7 +273,7 @@ def chart_radar(df: pd.DataFrame) -> plt.Figure:
     dims = ["Electoral Democracy", "Liberal Democracy", "Egalitarian Democracy",
             "Deliberative Democracy", "Participatory Democracy"]
     dims = [c for c in dims if c in df.columns]
-    if len(dims) < 3:
+    if len(dims) < 2:
         fig, ax = _fig(8, 8)
         ax.text(0.5, 0.5, "Not enough data for radar chart",
                 ha="center", va="center")
