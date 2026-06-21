@@ -43,8 +43,7 @@ df_full = get_data()
 
 # ── Sidebar — Filters ─────────────────────────────────────────────────────────
 with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/"
-             "Jupyter_logo.svg/40px-Jupyter_logo.svg.png", width=36)
+    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/40px-Jupyter_logo.svg.png", width=36)
     st.markdown("## 🔧 Dashboard Filters")
     st.markdown("---")
 
