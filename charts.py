@@ -267,13 +267,20 @@ def chart_violin(df: pd.DataFrame, col: str = "Electoral Democracy") -> plt.Figu
 
 
 # ── BONUS: RADAR CHART ────────────────────────────────────────────────────────
+
 def chart_radar(df: pd.DataFrame) -> plt.Figure:
     """Radar chart comparing 5 democracy dimensions across regions."""
-    dims   = ["Electoral Democracy", "Liberal Democracy", "Egalitarian Democracy",
-              "Deliberative Democracy", "Participatory Democracy"]
-    labels = ["Electoral", "Liberal", "Egalitarian", "Deliberative", "Participatory"]
+    dims = ["Electoral Democracy", "Liberal Democracy", "Egalitarian Democracy",
+            "Deliberative Democracy", "Participatory Democracy"]
+    dims = [c for c in dims if c in df.columns]
+    if len(dims) < 3:
+        fig, ax = _fig(8, 8)
+        ax.text(0.5, 0.5, "Not enough data for radar chart",
+                ha="center", va="center")
+        return fig
+    labels = [d.split()[0] for d in dims]
     latest = df.sort_values("year").groupby("country_name").last().reset_index()
-    rg     = latest.dropna(subset=["region"]).groupby("region")[dims].mean()
+    rg = latest.dropna(subset=["region"]).groupby("region")[dims].mean()
 
     angles = np.linspace(0, 2*np.pi, len(dims), endpoint=False).tolist()
     angles += angles[:1]
