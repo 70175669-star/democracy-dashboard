@@ -23,7 +23,7 @@ CORE_COLS = [
 ]
 
 def load_data(path=None):
-    df = pd.read_csv("data/vdem_tiny.csv", low_memory=False)
+   df = pd.read_csv("data/vdem_latest.csv", low_memory=False)
     available = [c for c in CORE_COLS if c in df.columns]
     if available:
         df = df[available]
