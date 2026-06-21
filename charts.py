@@ -303,12 +303,19 @@ def chart_radar(df: pd.DataFrame) -> plt.Figure:
 
 
 # ── BONUS: BUBBLE CHART ───────────────────────────────────────────────────────
+
 def chart_bubble(df: pd.DataFrame) -> plt.Figure:
     """GDP per Capita vs Electoral Democracy; bubble = population."""
-    plot_df = df.dropna(subset=["GDP per Capita", "Electoral Democracy",
-                                 "Population", "region"])
+    needed = ["GDP per Capita", "Electoral Democracy", "Population", "region"]
+    available = [c for c in needed if c in df.columns]
+    if len(available) < 4:
+        fig, ax = _fig(11, 8)
+        ax.text(0.5, 0.5, "Not enough data for bubble chart",
+                ha="center", va="center")
+        return fig
+    plot_df = df.dropna(subset=needed)
     plot_df = plot_df[plot_df["GDP per Capita"] > 0]
-    latest  = plot_df.sort_values("year").groupby("country_name").last().reset_index()
+    latest = plot_df.sort_values("year").groupby("country_name").last().reset_index()
     fig, ax = _fig(11, 8)
     for (region, grp), color in zip(latest.groupby("region"), PALETTE):
         sizes = (grp["Population"] / latest["Population"].max()) * 1500 + 20
@@ -318,8 +325,6 @@ def chart_bubble(df: pd.DataFrame) -> plt.Figure:
     ax.set_xlabel("GDP per Capita (log₁₀ USD)")
     ax.set_ylabel("Electoral Democracy Index")
     ax.set_title("Wealth vs Democracy — Bubble Chart (size = Population)")
-    ax.xaxis.set_major_formatter(
-        mticker.FuncFormatter(lambda v, _: f"${10**v:,.0f}"))
     ax.legend(fontsize=8, loc="lower right")
     ax.set_ylim(0, 1)
     fig.tight_layout()
