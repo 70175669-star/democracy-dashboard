@@ -48,7 +48,7 @@ with st.sidebar:
     st.markdown("---")
 
     # 1. Year range
-  st.markdown("**📅 Year Range**")
+    st.markdown("**📅 Year Range**")
     min_year = int(df_full["year"].min())
     max_year = int(df_full["year"].max())
     if min_year == max_year:
