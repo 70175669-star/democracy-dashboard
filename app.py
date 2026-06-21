@@ -40,9 +40,7 @@ def get_data():
     return filters.load_data()
 
 df_full = get_data()
-st.write("Year min/max:", df_full["year"].min(), df_full["year"].max())
-st.write("Region values:", df_full["e_regionpol_6C"].unique() if "e_regionpol_6C" in df_full.columns else "column dropped")
-st.write("Region mapped:", df_full["region"].value_counts())
+
 # ── Sidebar — Filters ─────────────────────────────────────────────────────────
 with st.sidebar:
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/40px-Jupyter_logo.svg.png", width=36)
