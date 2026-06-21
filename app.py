@@ -53,10 +53,9 @@ with st.sidebar:
     min_year = int(df_full["year"].min())
     max_year = int(df_full["year"].max())
     year_range = st.slider(
-    "Select year range",
-    min_value=min_year, max_value=max_year,
-    value=(min_year, max_year), step=1,
-)
+        "Select year range",
+        min_value=min_year, max_value=max_year,
+        value=(min_year, max_year), step=1,
     )
 
     # 2. Region multi-select
